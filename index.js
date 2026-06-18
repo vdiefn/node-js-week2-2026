@@ -28,6 +28,11 @@ const { formidable } = require('formidable');  // formidable v3 用 named import
 function getUploadConfig() {
   // TODO: 實作此函式
   // 提示：用 || 給預設值；MAX_FILE_SIZE_MB 是字串，記得先 Number() 轉型再換算 bytes
+  return {
+    uploadDir: process.env.UPLOAD_DIR || '/tmp',
+    maxFileSize: Number(process.env.MAX_FILE_SIZE_MB || 5) * 1024 * 1024,
+    gymName: process.env.GYM_NAME || '未命名健身房',
+  }
 }
 
 // ========== 任務二：取副檔名 ==========
@@ -51,6 +56,8 @@ function getUploadConfig() {
 function getFileExtension(filename) {
   // TODO: 實作此函式
   // 提示：用 lastIndexOf('.') 找最後一個 .，toLowerCase() 轉小寫
+  const index = filename.lastIndexOf(".")
+  return index === -1 ? "": filename.slice(index).toLowerCase()
 }
 
 // ========== 任務三：解析檔案 metadata ==========
