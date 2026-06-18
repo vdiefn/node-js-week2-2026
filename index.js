@@ -83,6 +83,12 @@ function getFileExtension(filename) {
 function parseFileMetadata(file) {
   // TODO: 實作此函式
   // 提示：呼叫 getFileExtension 取副檔名，Math.round(size / 1024) 算 KB
+
+  return {
+    filename: file.originalFilename,
+    sizeKB: Math.round(file.size / 1024),
+    ext: getFileExtension(file.originalFilename)
+  }
 }
 
 // ========== 任務四：產出 upload log 字串 ==========
@@ -105,6 +111,7 @@ function parseFileMetadata(file) {
 function formatUploadLog(meta, config) {
   // TODO: 實作此函式
   // 提示：用 template literal 組字串
+  return `[${config.gymName}] Uploaded ${meta.filename} (${meta.sizeKB} -> ${config.uploadDir})`
 }
 
 // ========== 任務五：路由分派 ==========
