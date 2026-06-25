@@ -1,6 +1,9 @@
 const http = require('node:http');
 const fs = require('node:fs');
-const { formidable } = require('formidable');  // formidable v3 用 named import
+const { formidable } = require('formidable');
+const handleUpload = require('./utils/handleUpload');
+const handleNotFound = require("./utils/handleNotFound")
+// formidable v3 用 named import
 
 // ========== 任務一：讀取上傳設定 ==========
 /**
@@ -149,6 +152,17 @@ function router(req, res, config) {
   //   - 超過 maxFileSize 時 formidable v3 發 'error' event，要用 form.on('error', ...) 接
   //   - 同時 form.parse 的 callback err 也要處理
   //   - 避免重複 res.writeHead（檢查 res.headersSent）
+
+  if(req.method === "POST" && req.url === "/coaches/avatar"){
+    if(!fs.existsSync(config.uploadDir)){
+      fs.mkdirSync(config.uploadDir, { recursive: true });
+    }
+
+    handleUpload(req, res, config)
+    return
+  }
+
+  handleNotFound(req, res)
 }
 
 // ========== 任務六：建立上傳 server ==========
@@ -170,6 +184,9 @@ function router(req, res, config) {
 function createUploadServer(config) {
   // TODO: 實作此函式
   // 提示：主邏輯都在 router 裡，這邊函式內容不多
+  const server = http.createServer((req, res) => router(req, res, config))
+
+  return server
 }
 
 module.exports = {
